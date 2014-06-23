@@ -1,0 +1,25 @@
+
+<sitemesh>
+	<!-- Exclude path from decoration. -->
+	<!-- common -->
+	<mapping path="*/excel" exclude="true" />
+	<mapping path="*/ajax*" exclude="true" />
+	<mapping path="*/error*" exclude="true" />
+	<mapping path="/test/*" exclude="true" />
+	<mapping path="/search/*" exclude="true" />
+	
+	<!-- front -->
+	<mapping path="/resources*" exclude="true" />
+	<mapping path="/login*" exclude="true" />
+	
+	
+	<!-- Map decorators to path patterns. -->
+	<!-- admin -->
+	<!-- 
+	<mapping path="/cadm*" decorator="/WEB-INF/decorators/cadmLayout.jsp" />
+	 -->
+	<!-- front -->
+	 
+	<mapping path="/*" decorator="/WEB-INF/decorators/layout.jsp" />
+	 
+</sitemesh> 

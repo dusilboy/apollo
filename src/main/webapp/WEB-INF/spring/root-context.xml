@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+  	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+  	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+  	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>/WEB-INF/config.properties</value>
+		</property>
+	</bean>
+   
+   <!-- 
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<tx:annotation-driven transaction-manager="transactionManagerLogin" />
+	 
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		p:dataSource-ref="dataSource" p:globalRollbackOnParticipationFailure="false" />
+		
+	<bean id="transactionManagerLogin"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		p:dataSource-ref="dataSourceLogin" p:globalRollbackOnParticipationFailure="false" />
+     
+    
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="validationQuery">
+			<value>SELECT 1</value>
+		</property>
+		<property name="testOnBorrow">
+			<value>true</value>
+		</property>
+    </bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath:com/skt/apollo/mapper/*.xml" />
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+	</bean>
+
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.skt.apollo.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+	 -->
+	
+ 
+	<!-- 필터 프록시 설정 -->
+	<bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
+		<security:filter-chain-map request-matcher="ant">
+			<security:filter-chain pattern="/**" filters="xssFilter, SQLFilter, CSRFFilter" />
+		</security:filter-chain-map>
+	</bean>
+	
+	<!-- xss 필터 -->
+	<bean id="xssFilter" class="com.skt.apollo.filter.XssFilter">
+		<property name="xssFilter" ref="xssFilterHelper" />
+		<property name="includePattern" value="${xss.includePattern}" />
+		<property name="excludePattern" value="${xss.excludePattern}" />
+	</bean>
+	
+	<!-- xss 필터 (로직) -->
+	<bean id="xssFilterHelper" class="com.skt.apollo.filter.html.HTMLInputFilter">
+		<constructor-arg>
+			<value type="boolean">false</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- sql injection 필터 -->
+	<bean id="SQLFilter" class="com.skt.apollo.filter.SQLFilter">
+		<property name="sqlFilter" ref="SQLFilterHelper" />
+		<property name="includePattern" value="${sql.includePattern}" />
+		<property name="excludePattern" value="${sql.excludePattern}" />
+	</bean>
+	
+	<!-- sql injection 필터 (로직) -->
+	<bean id="SQLFilterHelper" class="com.skt.apollo.filter.sql.SQLInjectionFilter">
+	</bean>
+	 
+	<!-- CSRF 필터 -->
+	<bean id="CSRFFilter" class="com.skt.apollo.filter.CSRFFilter">
+		<property name="includePattern" value="${csrf.includePattern}" />
+		<property name="excludePattern" value="${csrf.excludePattern}" />
+	</bean>
+ 
+</beans>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://java.sum.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+	 version="2.0">
+
+	 <tlib-version>1.0</tlib-version>
+	 <short-name>authUtil</short-name>
+	 
+	<function>
+		 <name>getRoleName</name>
+		 <function-class>com.skt.apollo.util.AuthUtil</function-class>
+		 <function-signature>java.lang.String getRoleName(java.util.List, java.lang.String)</function-signature>
+		 <example>${authUtil:getRoleName(List roleList, String authorities)}</example>
+	</function>
+
+</taglib>
